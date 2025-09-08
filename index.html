@@ -3,45 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scratchlet</title>
+    <title>Scratchlet - Blooket Remix</title>
     <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: "Nunito", sans-serif;
-            font-weight: 400;
-            background-color: #FFA500;
+            background: 
+                linear-gradient(rgba(210, 180, 140, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(210, 180, 140, 0.15) 1px, transparent 1px),
+                linear-gradient(135deg, #FF8C00 0%, #FFA500 100%);
+            background-size: 40px 40px;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
             position: relative;
+            color: white;
         }
         
         h1 {
             font-family: "Titan One", sans-serif;
-            color: silver;
-            text-align: left;
-            margin: 0;
-            padding: 10px 0;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            font-size: 3em;
-            letter-spacing: 1px;
+            color: #FFFFFF;
+            text-align: center;
+            margin: 60px 0 20px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            font-size: 4em;
+            letter-spacing: 2px;
+        }
+        
+        .tagline {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 40px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 极速飞艇.3);
+            font-weight: 600;
         }
         
         p {
-            font-family: "Nunito", sans-serif;
-            color: white;
-            font-size: 1.5em;
-            margin-top: 30px;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            background-color: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 12px;
-            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 1.2极速飞艇;
             line-height: 1.6;
+            max-width: 800px;
+            margin: 30px auto;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
         }
 
-        .nav-buttons {
+        .auth-buttons {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -49,51 +60,109 @@
             gap: 15px;
         }
 
-        .nav-btn {
+        .auth-btn {
             display: inline-block;
-            background-color: white;
-            color: black;
+            background: rgba(255, 255, 255, 0.9);
+            color: #FF8C00;
             padding: 12px 24px;
             border: none;
-            border-radius: 25px;
+            border-radius: 25极速飞艇;
             cursor: pointer;
             font-family: "Nunito", sans-serif;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1.1em;
             text-decoration: none;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             text-align: center;
         }
 
-        .nav-btn:hover {
-            background-color: #f0f0f0;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        .auth-btn:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .nav-btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 50px auto;
+            max-width: 1000px;
         }
 
-        .home-btn {
-            background-color: #4CAF50;
-            color: white;
+        .game-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
         }
 
-        .home-btn:hover {
-            background-color: #45a049;
+        .game-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .game-card h3 {
+            color: #FFFFFF;
+            font-family: "Titan One", sans-serif;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-card p {
+            background: none;
+            padding: 0;
+            margin: 0;
+            font-size: 1.1em;
+            border: none;
+            backdrop-filter: none;
+        }
+
+        .login-notice {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 1.1em;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+           极速飞艇 max-width: 600px;
+            margin: 40px auto;
         }
     </style>
 </head>
 <body>
-    <div class="nav-buttons">
-        <a href="https://scratchlet-official.github.io/home/" class="nav-btn home-btn" target="_blank">Home</a>
-        <a href="https://scratchlet-official.github.io/login/" class="nav-btn" target="_blank">Login</a>
-        <a href="https://scratchlet-official.github.io/register/" class="nav-btn" target="_blank">Register</a>
+    <div class="auth-buttons">
+        <a href="https://scratchlet-official.github.io/login/" class="auth-btn">Login</a>
+        <a href="https://scratchlet-official.github.io/register/" class="auth-btn">Register</a>
     </div>
+    
     <h1>Scratchlet</h1>
-    <p>The First Ever Designed in Scratch but Performed in HTML.</p>
+    <div class="tagline">The Ultimate Blooket Remix Experience</div>
+    
+    <p>Scratchlet takes the best of Blooket and adds a fresh orange twist! Enjoy educational games with new mechanics, custom blooks, and exciting gameplay modes that make learning fun and engaging.</p>
+
+    <div class="game-grid">
+        <div class="game-card">
+            <h3>Battle Royale</h3>
+            <p>Compete against classmates in this fast-paced elimination game!</p>
+        </div>
+        <div class="game-card">
+            <h3>Gold Quest</h3>
+            <p>Collect gold and outsmart your opponents in this strategic game!</p>
+        </div>
+        <div class="game-card">
+            <h3>Factory</h3>
+            <p>Manage your blook production and become the ultimate factory tycoon!</p>
+        </div>
+    </div>
+
+    <div class="login-notice">
+        🔒 <strong>Login required</strong> to access the full home dashboard and start playing games!
+    </div>
 </body>
 </html>
