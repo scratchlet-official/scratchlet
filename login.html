@@ -162,15 +162,15 @@
             <button type="submit" class="login-button">LOGIN TO DASHBOARD</button>
             
             <div class="register-link">
-                New to Scratchlet? <a href="https://scratchlet-official.github.io/register/">Create Account</a>
+                New to Scratchlet? <a href="register.html">Create Account</a>
             </div>
             
             <div class="bot-login">
-                <a href="https://scratchlet-official.github.io/bot-login/">Bot Account Login</a>
+                <a href="bot-login.html">Bot Account Login</a>
             </div>
             
             <div class="back-home">
-                <a href="https://scratchlet-official.github.io/scratchlet/">← Back to Landing Page</a>
+                <a href="index.html">← Back to Landing Page</a>
             </div>
         </form>
     </div>
@@ -185,7 +185,7 @@
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userRole', 'bot');
                 localStorage.setItem('username', 'scratchlet');
-                window.location.href = 'https://scratchlet-official.github.io/bot-panel/';
+                window.location.href = 'bot-panel.html';
                 return;
             }
             
@@ -197,7 +197,7 @@
                 localStorage.setItem('userRole', user.role || 'user');
                 localStorage.setItem('username', user.username);
                 localStorage.setItem('discord', user.discord || '');
-                window.location.href = 'https://scratchlet-official.github.io/home/';
+                window.location.href = 'home.html';
             } else {
                 alert('Invalid username or password!');
             }
