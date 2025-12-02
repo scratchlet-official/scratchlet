@@ -1117,6 +1117,21 @@ function hideOverlay(){overlay.classList.remove("active");}
 function closeInfoModal(){infoModal.style.display="none"; modal.style.display="flex";}
 
 // --- Add Coin Button init ---
+  // Only render unlock button if dev account
+  const adminControls = document.getElementById('admin-controls');
+  adminControls.innerHTML = "";
+  if (data.username === "SuperMemes_64") {
+    const btn = document.createElement("button");
+    btn.id = "addtokens";
+    btn.textContent = "Add Tokens";
+    btn.className = "nav-btn";
+    btn.addEventListener("click", ()=>{
+    userData.coins+=500;
+    saveUserData(userData);
+    loadUserData();
+  }
+                         });
+  }
 function initAddCoinButton(){
     const userData=loadUserData();
     if(userData.username==='SuperMemes_64'){addCoinBtn.style.display='inline-block';}
@@ -1212,7 +1227,7 @@ function showNotEnoughCoins() {
 // --- Open Pack ---
 function openPack(){
     if(!currentPack) return;
-    openingInProgress=true;
+    openingInProgress=true
     setPackButtonsDisabled(true);
     if(currentPackButton) currentPackButton.disabled = true;
     showOverlay();
