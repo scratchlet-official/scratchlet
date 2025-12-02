@@ -185,10 +185,11 @@ body {
 <div class="header">
     <div class="logo"><div class="logo-text">Scratchlet</div></div>
     <div class="nav-buttons">
-        <a href="home.html" class="nav-btn">🏠 Home</a>
-        <a href="stats.html" class="nav-btn">📊 Stats</a>
-        <a href="friends.html" class="nav-btn">👥 Friends</a>
-        <a href="blooks.html" class="nav-btn">😺 Blooks</a>
+        <a href="https://scratchlet-official.github.io/home/" class="nav-btn">🏠 Home</a>
+        <a href="https://scratchlet-official.github.io/stats/" class="nav-btn">📊 Stats</a>
+        <a href="https://scratchlet-official.github.io/profile/" class="nav-btn">👤 Profile</a>
+        <a href="https://scratchlet-official.github.io/friends/" class="nav-btn">👥 Friends</a>
+        <a href="https://scratchlet-official.github.io/blooks/" class="nav-btn">😺 Blooks</a>
         <button class="nav-btn" onclick="logout()" style="background:rgba(255,0,0,0.3);color:white;">🚪 Logout</button>
     </div>
 </div>
@@ -1117,21 +1118,6 @@ function hideOverlay(){overlay.classList.remove("active");}
 function closeInfoModal(){infoModal.style.display="none"; modal.style.display="flex";}
 
 // --- Add Coin Button init ---
-  // Only render unlock button if dev account
-  const adminControls = document.getElementById('admin-controls');
-  adminControls.innerHTML = "";
-  if (data.username === "SuperMemes_64") {
-    const btn = document.createElement("button");
-    btn.id = "addCoinBtn";
-    btn.textContent = "Add Tokens";
-    btn.className = "nav-btn";
-    btn.addEventListener("click", ()=>{
-    userData.coins+=500;
-    saveUserData(userData);
-    loadUserData();
-  }
-                         });
-  }
 function initAddCoinButton(){
     const userData=loadUserData();
     if(userData.username==='SuperMemes_64'){addCoinBtn.style.display='inline-block';}
@@ -1227,7 +1213,7 @@ function showNotEnoughCoins() {
 // --- Open Pack ---
 function openPack(){
     if(!currentPack) return;
-    openingInProgress=true
+    openingInProgress=true;
     setPackButtonsDisabled(true);
     if(currentPackButton) currentPackButton.disabled = true;
     showOverlay();
