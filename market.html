@@ -256,7 +256,6 @@ body {
         </div>
     </div>
     
-    <button id="addCoinBtn" class="open-btn">+💰 Add Coins</button>
     <button id="claimBtn" class="open-btn">🎁 Claim Daily Coins</button>
 
     <div class="instant-card" style="margin:0 auto 20px auto;">
@@ -1451,18 +1450,6 @@ let instantOpen = false;
 function showOverlay(){overlay.classList.add("active");}
 function hideOverlay(){overlay.classList.remove("active");}
 function closeInfoModal(){infoModal.style.display="none"; modal.style.display="flex";}
-
-// --- Add Coin Button init ---
-function initAddCoinButton(){
-    const userData=loadUserData();
-    if(userData.username==='SuperMemes_64'){addCoinBtn.style.display='inline-block';}
-    addCoinBtn.addEventListener('click',()=>{
-        const userData=loadUserData();
-        userData.coins+=500;
-        saveUserData(userData);
-        loadUserData();
-    });
-}
 
 // --- Toggle instant ---
 instantToggleBtn.addEventListener("click",()=>{
