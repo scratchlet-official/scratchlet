@@ -218,18 +218,13 @@
                 return;
             }
             
-            const discordRegex = /^.{2,32}#\d{4}$/;
-            if (!discordRegex.test(discord)) {
-                alert('Please enter a valid Discord username (e.g., User#1234)');
-                return;
-            }
-            
+          
 
             
             const userData = {
                 username: username,
                 email: email,
-                discord: discord,
+    
                 password: password,
                 role: 'user',
                 verified: true,
@@ -243,7 +238,7 @@
             localStorage.setItem('isLoggedIn', 'true');
             localStorage.setItem('userRole', 'user');
             localStorage.setItem('username', username);
-            localStorage.setItem('discord', discord);
+
             
             alert('Account created successfully! Welcome to Scratchlet!');
             window.location.href = 'home.html';
