@@ -169,18 +169,6 @@
     <div class="register-container">
         <h1>Join Scratchlet</h1>
         
-        <div class="discord-info">
-            <p>📋 <strong>Account Requirements:</strong></p>
-            <p>• Valid Discord account required</p>
-            <p>• Must join our Discord server</p>
-            <p>• Discord verification mandatory</p>
-            <p style="margin-top: 10px;">
-                <a href="discord-verify.html" style="color: #5865F2; text-decoration: underline;">
-                    Click here for verification instructions
-                </a>
-            </p>
-        </div>
-        
         <form id="registerForm">
             <div class="input-group">
                 <label for="username">Username</label>
@@ -207,10 +195,6 @@
                 <input type="password" id="confirm-password" required placeholder="Confirm your password">
             </div>
             
-            <div class="verification-status not-verified" id="verificationStatus">
-                ⚠️ Discord account not verified. Please join our Discord server to complete registration.
-            </div>
-            
             <button type="submit" class="register-button" id="registerButton" disabled>CREATE ACCOUNT</button>
             
             <div class="login-link">
@@ -224,49 +208,6 @@
     </div>
 
     <script>
-        const discordInput = document.getElementById('discord');
-        const verificationStatus = document.getElementById('verificationStatus');
-        const registerButton = document.getElementById('registerButton');
-        const registerForm = document.getElementById('registerForm');
-        
-        function verifyDiscordAccount(discordUsername) {
-            const discordRegex = /^.{2,32}#\d{4}$/;
-            
-            if (!discordRegex.test(discordUsername)) {
-                return {
-                    valid: false,
-                    message: "Invalid Discord format. Must be: username#1234"
-                };
-            }
-            
-            const isVerified = Math.random() > 0.5;
-            
-            return {
-                valid: isVerified,
-                message: isVerified 
-                    ? "✅ Discord account verified! You can now register." 
-                    : "❌ Discord account not found. Please join our server first."
-            };
-        }
-        
-        discordInput.addEventListener('blur', function() {
-            const discordUsername = this.value.trim();
-            
-            if (discordUsername) {
-                const result = verifyDiscordAccount(discordUsername);
-                
-                if (result.valid) {
-                    verificationStatus.className = 'verification-status verified';
-                    verificationStatus.innerHTML = result.message;
-                    registerButton.disabled = false;
-                } else {
-                    verificationStatus.className = 'verification-status not-verified';
-                    verificationStatus.innerHTML = result.message;
-                    registerButton.disabled = true;
-                }
-            }
-        });
-        
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -287,11 +228,7 @@
                 return;
             }
             
-            const result = verifyDiscordAccount(discord);
-            if (!result.valid) {
-                alert('Please verify your Discord account before registering.');
-                return;
-            }
+
             
             const userData = {
                 username: username,
