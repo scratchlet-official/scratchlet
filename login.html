@@ -197,7 +197,7 @@
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userRole', user.role || 'user');
                 localStorage.setItem('username', user.username);
-                localStorage.setItem('discord', user.discord || '');
+                localStorage.setItem('password', user.password);
                 window.location.href = 'home.html';
             } else {
                 alert('Invalid username or password!');
