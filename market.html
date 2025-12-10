@@ -84,7 +84,6 @@ body {
     transition: all 0.3s ease;
     cursor:pointer;
     backdrop-filter:blur(10px);
-    /* width/height set above for uniform size */
     position: relative;
 }
 .card img, .instant-card img {width:100%; height:auto; border-radius:15px; box-shadow:0 6px 12px rgba(0,0,0,0.2);}
@@ -223,7 +222,6 @@ body {
     background: #FFA500;
 }
 
-/* Coin animation styles */
 .coin {
     position: fixed;
     z-index: 9999;
@@ -524,10 +522,8 @@ function updateUserStats(blook, cost) {
     const userData = loadUserData();
     userData.coins -= cost;
 
-    // Ensure blookCounts exists
     if (!userData.blookCounts) userData.blookCounts = {};
 
-    // Track unlocked blooks + counts
     if (!userData.unlockedBlooks.includes(blook.name)) {
         userData.unlockedBlooks.push(blook.name);
         userData.blookCounts[blook.name] = 1;
@@ -546,9 +542,6 @@ function logout() {
     location.reload();
 }
 
-// ==================== DAILY CLAIM SYSTEM ====================
-
-// Initialize daily claim system
 function initDailyClaim() {
     const claimBtn = document.getElementById('claimBtn');
     if (!claimBtn) return;
@@ -556,11 +549,9 @@ function initDailyClaim() {
     claimBtn.addEventListener('click', handleDailyClaim);
     updateClaimStatus();
     
-    // Start countdown timer
     startClaimCountdown();
 }
 
-// Handle daily claim
 function handleDailyClaim() {
     if (!canClaimDaily()) {
         showClaimNotReady();
@@ -571,41 +562,34 @@ function handleDailyClaim() {
     userData.coins += 500;
     saveUserData(userData);
     
-    // Save claim time
     const now = new Date();
     localStorage.setItem('lastDailyClaim', now.getTime().toString());
     
-    // Update UI
     loadUserData();
     updateClaimStatus();
     
-    // Show success animation
     showClaimSuccess();
 }
 
-// Check if user can claim (8 PM US Eastern Time reset)
 function canClaimDaily() {
     const lastClaim = localStorage.getItem('lastDailyClaim');
     
     if (!lastClaim) {
-        return true; // First time claiming
+        return true;
     }
     
     const now = new Date();
     const lastClaimDate = new Date(parseInt(lastClaim));
     
-    // Check if 24 hours have passed
     const hoursSinceClaim = (now - lastClaimDate) / (1000 * 60 * 60);
     
     if (hoursSinceClaim >= 24) {
         return true;
     }
     
-    // Check if it's past 8 PM US Eastern Time on a new day
     const easternTime = getEasternTime();
     const lastClaimEasternTime = convertToEasternTime(lastClaimDate);
     
-    // If it's 8 PM or later in Eastern Time and it's a new day
     if (easternTime.getDate() !== lastClaimEasternTime.getDate() && easternTime.getHours() >= 20) {
         return true;
     }
@@ -613,22 +597,18 @@ function canClaimDaily() {
     return false;
 }
 
-// Get US Eastern Time (GMT-5, or GMT-4 during DST)
 function getEasternTime() {
     const now = new Date();
     
-    // Check if it's Daylight Saving Time (second Sunday in March to first Sunday in November)
     const year = now.getUTCFullYear();
-    const dstStart = new Date(Date.UTC(year, 2, 8, 2)); // Second Sunday in March
-    const dstEnd = new Date(Date.UTC(year, 10, 1, 2)); // First Sunday in November
+    const dstStart = new Date(Date.UTC(year, 2, 8, 2));
+    const dstEnd = new Date(Date.UTC(year, 10, 1, 2));
     
-    // Find second Sunday in March
     dstStart.setUTCDate(14 - ((dstStart.getUTCDay() + 1) % 7));
-    // Find first Sunday in November
     dstEnd.setUTCDate(7 - ((dstEnd.getUTCDay() + 1) % 7));
     
     const isDST = now >= dstStart && now < dstEnd;
-    const offset = isDST ? -4 : -5; // EDT is -4, EST is -5
+    const offset = isDST ? -4 : -5;
     
     return new Date(now.getTime() + (offset * 60 * 60 * 1000));
 }
@@ -648,16 +628,6 @@ function convertToEasternTime(date) {
     return new Date(date.getTime() + (offset * 60 * 60 * 1000));
 }
 
-// Get current time in Eastern Time format
-function getEasternTimeString() {
-    const easternTime = getEasternTime();
-    const hours = easternTime.getHours().toString().padStart(2, '0');
-    const minutes = easternTime.getMinutes().toString().padStart(2, '0');
-    const seconds = easternTime.getSeconds().toString().padStart(2, '0');
-    return `${hours}:${minutes}:${seconds} ET`;
-}
-
-// Update claim button status
 function updateClaimStatus() {
     const claimBtn = document.getElementById('claimBtn');
     const nextClaimSpan = document.getElementById('nextClaimTime');
@@ -679,11 +649,10 @@ function updateClaimStatus() {
             const nextClaimTime = new Date(parseInt(lastClaim) + (24 * 60 * 60 * 1000));
             const nextEasternTime = convertToEasternTime(nextClaimTime);
             
-            // Format next claim time in 12-hour format with AM/PM
             let hours = nextEasternTime.getHours();
             const ampm = hours >= 12 ? 'PM' : 'AM';
             hours = hours % 12;
-            hours = hours ? hours : 12; // Convert 0 to 12
+            hours = hours ? hours : 12;
             const minutes = nextEasternTime.getMinutes().toString().padStart(2, '0');
             nextClaimSpan.textContent = `${hours}:${minutes} ${ampm} ET`;
         } else {
@@ -693,7 +662,6 @@ function updateClaimStatus() {
     }
 }
 
-// Countdown timer
 function startClaimCountdown() {
     updateCountdown();
     setInterval(updateCountdown, 1000);
@@ -726,7 +694,6 @@ function updateCountdown() {
     
     claimBtn.textContent = `⌛ ${hours}h ${minutes}m ${seconds}s`;
     
-    // Update the next claim display
     const nextEasternTime = convertToEasternTime(nextClaim);
     let displayHours = nextEasternTime.getHours();
     const ampm = displayHours >= 12 ? 'PM' : 'AM';
@@ -736,18 +703,15 @@ function updateCountdown() {
     nextClaimSpan.textContent = `${displayHours}:${displayMinutes} ${ampm} ET (${hours}h ${minutes}m)`;
 }
 
-// Show claim success animation
 function showClaimSuccess() {
     const claimBtn = document.getElementById('claimBtn');
     if (!claimBtn) return;
     
-    // Create coin animation
     const coins = 15;
     for (let i = 0; i < coins; i++) {
         createFallingCoin();
     }
     
-    // Button animation
     claimBtn.innerHTML = '✅ 500 Coins Claimed!';
     claimBtn.style.background = 'linear-gradient(135deg, #32CD32 0%, #228B22 100%)';
     
@@ -758,20 +722,17 @@ function showClaimSuccess() {
     }, 3000);
 }
 
-// Create falling coin animation
 function createFallingCoin() {
     const coin = document.createElement('div');
     coin.innerHTML = '💰';
     coin.className = 'coin';
     
-    // Random starting position
     const startX = Math.random() * window.innerWidth;
     coin.style.left = `${startX}px`;
     coin.style.top = '-50px';
     
     document.body.appendChild(coin);
     
-    // Animation
     const duration = 1000 + Math.random() * 1000;
     const endY = window.innerHeight + 50;
     
@@ -786,7 +747,6 @@ function createFallingCoin() {
     animation.onfinish = () => coin.remove();
 }
 
-// Show claim not ready modal
 function showClaimNotReady() {
     const lastClaim = localStorage.getItem('lastDailyClaim');
     let message = 'Come back at 8 PM Eastern Time (ET) for your next claim!';
@@ -807,7 +767,6 @@ function showClaimNotReady() {
     modal.style.display = "flex";
     showOverlay();
     
-    // Setup close button
     yesBtn.style.display = "none";
     infoBtn.style.display = "none";
     noBtn.textContent = "Close";
@@ -824,7 +783,6 @@ function showClaimNotReady() {
     noBtn.onclick = closeHandler;
 }
 
-// --- Packs Data ---
 const packs = {
     fbisanta: { 
         name: "FBI Santa",
@@ -832,7 +790,7 @@ const packs = {
         image: "https://i.postimg.cc/m2TBNc19/IMG-0091.webp",
         background: "https://i.postimg.cc/KjkJ3qFc/Screenshot-18-9-2025-213351-turbowarp-org.jpg",
         blooks: [
-            {name:"FBI Santa",rarity:"Chroma",color:"cyan",chance:"100%,image:"https://i.postimg.cc/m2TBNc19/IMG-0091.webp"},
+            {name:"FBI Santa",rarity:"Chroma",color:"cyan",chance:"100%",image:"https://i.postimg.cc/m2TBNc19/IMG-0091.webp"}
         ]
      },
     breakfast: { 
@@ -850,7 +808,7 @@ const packs = {
             {name:"Waffle",rarity:"Rare",color:"blue",chance:"9%",image:"https://i.postimg.cc/MGmkQDHm/waffle.webp"},
             {name:"Pancakes",rarity:"Rare",color:"blue",chance:"9%",image:"https://i.postimg.cc/cC6PPGmF/pancakes.webp"},
             {name:"French Toast",rarity:"Epic",color:"red",chance:"5%",image:"https://i.postimg.cc/QCPv3YYh/frenchtoast.webp"},
-            {name:"Pizza",rarity:"Epic",color:"red",chance:"2%",image:"https://i.postimg.cc/TwdzqDWM/pizza.webp"},
+            {name:"Pizza",rarity:"Epic",color:"red",chance:"2%",image:"https://i.postimg.cc/TwdzqDWM/pizza.webp"}
         ]
      },
          
@@ -864,7 +822,7 @@ const packs = {
             {name:"Eat Me",rarity:"Uncommon",color:"limegreen",chance:"15%",image:"https://i.postimg.cc/bvGc1WCh/eat.webp"},
             {name:"Drink Me",rarity:"Uncommon",color:"limegreen",chance:"15%",image:"https://i.postimg.cc/6pbx2thc/drink.webp"},
             {name:"Alice",rarity:"Uncommon",color:"limegreen",chance:"15%",image:"https://i.postimg.cc/RVRBmc6j/alice.webp"},
-            {name:"Queen of Hearts",rarity:"Uncommon",color:"limegreen",chance:"15%",image:"https://i.postimg.cc/SRfwyhsW-/queenofhearts.webp"},
+            {name:"Queen of Hearts",rarity:"Uncommon",color:"limegreen",chance:"15%",image:"https://i.postimg.cc/SRfwyhsW/queenofhearts.webp"},
             {name:"Dormouse",rarity:"Rare",color:"blue",chance:"6.5%",image:"https://i.postimg.cc/fTZN1HLc/dormouse.webp"},
             {name:"White Rabbit",rarity:"Rare",color:"blue",chance:"6.5%",image:"https://i.postimg.cc/jq6V6zXL/whiterabbit.webp"},
             {name:"Cheshire Cat",rarity:"Rare",color:"blue",chance:"6.5%",image:"https://i.postimg.cc/1X0ZfFWV/cheshirecat.webp"},
@@ -921,7 +879,7 @@ const packs = {
             {name:"Yellow Astronaut",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/Y9qNsm7F/yellowastronaut.png"},
             {name:"Lime Astronaut",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/7YQRMwgX/limeastronaut.png"},
             {name:"Green Astronaut",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/pLzBhHkm/greenastronaut.png"},
-            {name:"Cyan Astronsut",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/BQdgn65W/cyanastronaut.png"},
+            {name:"Cyan Astronaut",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/BQdgn65W/cyanastronaut.png"},
             {name:"Blue Astronaut",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/BQ8p3DKc/blueastronaut.png"},
             {name:"Pink Astronaut",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/Y2DRT8hC/pinkastronaut.png"},
             {name:"Purple Astronaut",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/QxMPTHWH/purpleastronaut.png"},
@@ -946,11 +904,11 @@ const packs = {
             {name:"Lovely Bot",rarity:"Uncommon",color:"limegreen",chance:"19.5%",image:"https://i.postimg.cc/85ZhLkqb/lovelybot.png"},
             {name:"Angry Bot",rarity:"Uncommon",color:"limegreen",chance:"19.5%",image:"https://i.postimg.cc/3wHCTcX2/angrybot.png"},
             {name:"Happy Bot",rarity:"Uncommon",color:"limegreen",chance:"19.5%",image:"https://i.postimg.cc/xdyGT35h/happybot.png"},
-            {name:"Watson",rarity:"Rare",color:"blue",chance:"9%",image:"https://i.postimg.cc/2SW-FgDZz/watson.png"},
+            {name:"Watson",rarity:"Rare",color:"blue",chance:"9%",image:"https://i.postimg.cc/2SWFgDZz/watson.png"},
             {name:"Buddy Bot",rarity:"Rare",color:"blue",chance:"9%",image:"https://i.postimg.cc/Fs8VPR1W/buddybot.png"},
             {name:"Brainy Bot",rarity:"Epic",color:"red",chance:"3.7%",image:"https://i.postimg.cc/Fs7xgcFk/brainybot.png"},
             {name:"Mega Bot",rarity:"Legendary",color:"Orange",chance:"0.3%",image:"https://i.postimg.cc/c1DmnTWN/megabot.png"},
-            {name:"Ultra Bot",rarity:"Chroma",color:"cyan",chance:"0.06%",image:"https://i.postimg.cc/Fz10p5vX/Ultra-Bot.png"},
+            {name:"Ultra Bot",rarity:"Chroma",color:"cyan",chance:"0.06%",image:"https://i.postimg.cc/Fz10p5vX/Ultra-Bot.png"}
         ]
     },
   
@@ -976,7 +934,7 @@ const packs = {
             {name:"Lucky Frog",rarity: "Chroma",color:"Cyan",chance:"0.08%",image:"https://i.postimg.cc/FKBPQZKv/luckyfrog.png"},
             {name:"Lovely Frog",rarity: "Chroma",color:"Cyan",chance:"0.08%",image:"https://i.postimg.cc/s2Xn88sK/lovelyfrog.png"},
             {name:"Rainbow Narwhal",rarity: "Chroma",color:"Cyan",chance:"0.06%",image:"https://i.postimg.cc/XNyP4TFz/rainbownarwhal.png"},
-            {name:"Chrimson Octopus",rarity: "Chroma",color:"Cyan",chance:"0.06%",image:"https://i.postimg.cc/0QzB644r/crimsonoctopus.png"},
+            {name:"Crimson Octopus",rarity: "Chroma",color:"Cyan",chance:"0.06%",image:"https://i.postimg.cc/0QzB644r/crimsonoctopus.png"},
             {name:"Donut Blobfish",rarity: "Chroma",color:"Cyan",chance:"0.06%",image:"https://i.postimg.cc/bJ4F1TXg/donutblobfish.png"},
             {name:"Rainbow Jellyfish",rarity: "Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/4yCBYxtF/rainbowjellyfish.png"},
             {name:"Poison Dart Frog",rarity: "Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/htKZ8vYk/poisondartfrog.png"},
@@ -1021,7 +979,7 @@ const packs = {
             {name:"Velociraptor",rarity:"Rare",color:"Blue",chance:"9%",image:"https://i.postimg.cc/65Jq62bx/Velociraptor.webp"},
             {name:"Brontosaurus",rarity:"Rare",color:"Blue",chance:"9%",image:"https://i.postimg.cc/85x56j1W/Brontosaurus.webp"},
             {name:"Triceratops",rarity:"Epic",color:"Red",chance:"3.7%",image:"https://i.postimg.cc/Hn5L4dxN/Triceratops.webp"},
-            {name:"Tryannosaurus Rex",rarity:"Legendary",color:"Orange",chance:"0.3%",image:"https://i.postimg.cc/ZRWnnrh4/Tyrannosaurus-Rex.webp"},
+            {name:"Tyrannosaurus Rex",rarity:"Legendary",color:"Orange",chance:"0.3%",image:"https://i.postimg.cc/ZRWnnrh4/Tyrannosaurus-Rex.webp"},
             {name:"Golden Amber",rarity:"Chroma",color:"Cyan",chance:"0.07%",image:"https://i.postimg.cc/T2WhXq9c/Golden-Amber.webp"}
         ] 
     },
@@ -1042,7 +1000,7 @@ const packs = {
             {name:"Yeti",rarity:"Legendary",color:"Orange",chance:"0.35%",image:"https://i.postimg.cc/gk2z2Vy5/yeti.png"},
             {name:"Ice Slime",rarity:"Chroma",color:"Cyan",chance:"0.08%",image:"https://i.postimg.cc/nrHH77yX/iceslime.png"},
             {name:"Ice Fossil",rarity:"Chroma",color:"Cyan",chance:"0.05%",image:"https://i.postimg.cc/sfcfz6W7/frozenfossil.png"},
-            {name:"Ice Crab",rarity:"Chroma",color:"Cyan",chance:"0.02%",image:"https://i.postimg.cc/RF1SNGDr/icecrab.png"},
+            {name:"Ice Crab",rarity:"Chroma",color:"Cyan",chance:"0.02%",image:"https://i.postimg.cc/RF1SNGDr/icecrab.png"}
         ]
     },
 
@@ -1062,7 +1020,7 @@ const packs = {
             {name:"Crocodile",rarity:"Epic",color:"red",chance:"3.6%",image:"https://i.postimg.cc/x10t7Pms/crocodile.png"},
             {name:"Sugar Glider",rarity:"Legendary",color:"orange",chance:"0.37%",image:"https://i.postimg.cc/pLqqtnYP/sugarglider.png"},
             {name:"Teal Platypus",rarity:"Chroma",color:"cyan",chance:"0.03%",image:"https://i.postimg.cc/ZqnjYKVp/tealplatypus.png"},
-            {name:"Galaxy Platypus",rarity:"Mystical",color:"#9C27B0",chance:"0.006%",image:"https://i.postimg.cc/bv4rG3HL/Galaxy-Platypus.gif"},
+            {name:"Galaxy Platypus",rarity:"Mystical",color:"#9C27B0",chance:"0.006%",image:"https://i.postimg.cc/bv4rG3HL/Galaxy-Platypus.gif"}
         ]
     },
 
@@ -1074,7 +1032,7 @@ const packs = {
         blooks: [
             {name:"Deckhand",rarity:"Uncommon",color:"limegreen",chance:"16%",image:"https://i.postimg.cc/SsRJrDfB/deckhand.webp"},
             {name:"Buccaneer",rarity:"Uncommon",color:"limegreen",chance:"16%",image:"https://i.postimg.cc/hhWvKgRn/buccaneer.webp"},
-            {name:"Swashblucker",rarity:"Uncommon",color:"limegreen",chance:"16%",image:"https://i.postimg.cc/9XvYD7Wm/sw-ashbuckler.webp"},
+            {name:"Swashbuckler",rarity:"Uncommon",color:"limegreen",chance:"16%",image:"https://i.postimg.cc/9XvYD7Wm/swashbuckler.webp"},
             {name:"Treasure Map",rarity:"Uncommon",color:"limegreen",chance:"16%",image:"https://i.postimg.cc/g2pyDbX1/treasuremap.webp"},
             {name:"Seagull",rarity:"Uncommon",color:"limegreen",chance:"16%",image:"https://i.postimg.cc/ZKpFp5Rr/seagull.webp"},
             {name:"Jolly Pirate",rarity:"Rare",color:"blue",chance:"8%",image:"https://i.postimg.cc/pdGDR9Gt/jollypirate.webp"},
@@ -1082,7 +1040,7 @@ const packs = {
             {name:"Kraken",rarity:"Epic",color:"Red",chance:"3.67%",image:"https://i.postimg.cc/x1PvppL8/kraken.webp"},
             {name:"Captain Blackbeard",rarity:"Legendary",color:"orange",chance:"0.3%",image:"https://i.postimg.cc/BvQxr5Cg/captainblackbeard.webp"},
             {name:"Pirate Pufferfish",rarity:"Chroma",color:"cyan",chance:"0.06%",image:"https://i.postimg.cc/Hn7jGnK3/piratepufferfish.png"},
-            {name:"Treasure Chest",rarity:"Chroma",color:"cyan",chance:"0.03%",image:"https://i.postimg.cc/d1fDSrWL/Treasure-Chest.png"},
+            {name:"Treasure Chest",rarity:"Chroma",color:"cyan",chance:"0.03%",image:"https://i.postimg.cc/d1fDSrWL/Treasure-Chest.png"}
         ]
     },
 
@@ -1102,7 +1060,7 @@ const packs = {
             {name:"Butterfly",rarity:"Legendary",color:"orange",chance:"0.5%",image:"https://i.postimg.cc/ZK5jtSK3/butterfly.webp"},
             {name:"Lucky Bee",rarity:"Chroma",color:"cyan",chance:"0.06%",image:"https://i.postimg.cc/g2wDjHh2/luckybee.webp"},
             {name:"Blue Butterfly",rarity:"Chroma",color:"cyan",chance:"0.03%",image:"https://i.postimg.cc/Dfg5MZFn/bluebutterfly.webp"},
-            {name:"Fire Ant",rarity:"Chroma",color:"cyan",chance:"0.03%",image:"https://i.postimg.cc/tgWNtR20/Fire-Ant.png"},
+            {name:"Fire Ant",rarity:"Chroma",color:"cyan",chance:"0.03%",image:"https://i.postimg.cc/tgWNtR20/Fire-Ant.png"}
         ]
     },
 
@@ -1121,7 +1079,7 @@ const packs = {
             {name:"Sushi",rarity:"Rare",color:"blue",chance:"7%",image:"https://i.postimg.cc/FRKVg3RY/sushi.webp"},
             {name:"Cheeseburger",rarity:"Epic",color:"red",chance:"3.31%",image:"https://i.postimg.cc/PJgbj7MD/cheeseburger.webp"},
             {name:"Sandwich",rarity:"Legendary",color:"orange",chance:"0.5%",image:"https://i.postimg.cc/V6K37kjS/sandwich.webp"},
-            {name:"Half-Sandwich",rarity:"chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/zvbw4NT5/halfasandwich.webp"},
+            {name:"Half-Sandwich",rarity:"chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/zvbw4NT5/halfasandwich.webp"}
         ]
     },
 
@@ -1140,7 +1098,7 @@ const packs = {
             {name:"Bouncy Ball",rarity:"Epic",color:"red",chance:"3.5%",image:"https://i.postimg.cc/3wtXt1dg/bouncy-ball.png"},
             {name:"Yellow Brick",rarity:"Legendary",color:"orange",chance:"1.25%",image:"https://i.postimg.cc/PxdmfZZ6/Yellow-Brick.png"},
             {name:"Fidget Spinner",rarity:"Chroma",color:"cyan",chance:"0.08%",image:"https://i.postimg.cc/W3KMv4mz/Fidget-Spinner.png"},
-            {name:"Tamagochi",rarity:"Mystical",color:"#9C27B0",chance:"0.009%",image:"https://i.postimg.cc/1R6W30LH/Tamagochi.gif"},
+            {name:"Tamagochi",rarity:"Mystical",color:"#9C27B0",chance:"0.009%",image:"https://i.postimg.cc/1R6W30LH/Tamagochi.gif"}
         ]
     },
 
@@ -1159,7 +1117,7 @@ const packs = {
             {name:"Paint Brush",rarity:"Epic",color:"red",chance:"3%",image:"https://i.postimg.cc/k4rb1H7R/Paint-Brush.png"},
             {name:"Blooky",rarity:"Epic",color:"red",chance:"3%",image:"https://i.postimg.cc/fbSdvsQh/Blooky.png"},
             {name:"Artist",rarity:"Legendary",color:"orange",chance:"0.5%",image:"https://i.postimg.cc/d3wTvTkq/Artist.png"},
-            {name:"Angry Blooky",rarity:"Chroma",color:"cyan",chance:"0.02%",image:"https://i.postimg.cc/ydFSw-TNQ/Angry-Blooky.png"},
+            {name:"Angry Blooky",rarity:"Chroma",color:"cyan",chance:"0.02%",image:"https://i.postimg.cc/ydFSwTNQ/Angry-Blooky.png"}
         ]
     },
 
@@ -1193,10 +1151,10 @@ const packs = {
             {name:"Holiday Elf",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/qvntbQhS/holidayelf.png"},
             {name:"Santa Claws",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/1tRfzQC1/santaclaws.png"},
             {name:"Cozy Baby Penguin",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/QM3FR5ct/cozybabypenguin.png"},
-            {name:"Blue Sweater Snowman",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/7Y5J7qxx/bluesw-eatersnowman.png"},
-            {name:"Red Sweater Snowman",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/J76BGsC6/redsw-eatersnowman.png"},
-            {name:"Elf Sweater Snowman",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/pX3hJ3TK/elfsw-eatersnowman.png"},
-            {name:"Hamsta Claus",rarity:"Mystical",color:"#9C27B0",chance:"0.008%",image:"https://ac.blooket.com/marketassets/blooks/hamstaclaus.svg"},
+            {name:"Blue Sweater Snowman",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/7Y5J7qxx/bluesweatersnowman.png"},
+            {name:"Red Sweater Snowman",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/J76BGsC6/redsweatersnowman.png"},
+            {name:"Elf Sweater Snowman",rarity:"Chroma",color:"Cyan",chance:"0.04%",image:"https://i.postimg.cc/pX3hJ3TK/elfsweatersnowman.png"},
+            {name:"Hamsta Claus",rarity:"Mystical",color:"#9C27B0",chance:"0.008%",image:"https://ac.blooket.com/marketassets/blooks/hamstaclaus.svg"}
         ]
     },
 
@@ -1207,8 +1165,8 @@ const packs = {
         background: "https://i.postimg.cc/Mpgd05Mv/spooky-background.png",
         blooks: [
             {name:"Pumpkin",rarity:"Uncommon",color:"limegreen",chance:"19%",image:"https://i.postimg.cc/T3khBNq3/pumpkin.webp"},
-            {name:"Swamp Monster",rarity:"Uncommon",color:"limegreen",chance:"19%",image:"https://i.postimg.cc/bvsdP03H/sw-ampmonster.webp"},
-            {name:"Freankenstein",rarity:"Uncommon",color:"limegreen",chance:"19%",image:"https://i.postimg.cc/BnZXYfFz/frankenstein.webp"},
+            {name:"Swamp Monster",rarity:"Uncommon",color:"limegreen",chance:"19%",image:"https://i.postimg.cc/bvsdP03H/swampmonster.webp"},
+            {name:"Frankenstein",rarity:"Uncommon",color:"limegreen",chance:"19%",image:"https://i.postimg.cc/BnZXYfFz/frankenstein.webp"},
             {name:"Vampire",rarity:"Uncommon",color:"limegreen",chance:"19%",image:"https://i.postimg.cc/hPBJmdtc/vampire.webp"},
             {name:"Zombie",rarity:"Rare",color:"blue",chance:"4%",image:"https://i.postimg.cc/bN9Z9wZb/zombie.webp"},
             {name:"Mummy",rarity:"Rare",color:"blue",chance:"4%",image:"https://i.postimg.cc/3rp4WB7t/mummy.webp"},
@@ -1228,7 +1186,7 @@ const packs = {
             {name:"Pumpkin King",rarity:"Chroma",color:"cyan",chance:"0.04%",image:"https://i.postimg.cc/3wVNxyqM/pumpkinking.webp"},
             {name:"Spooky Pumpkin",rarity:"Chroma",color:"cyan",chance:"0.02%",image:"https://i.postimg.cc/jShy2hHp/spookypumpkin.webp"},
             {name:"Spooky Mummy",rarity:"Chroma",color:"cyan",chance:"0.02%",image:"https://i.postimg.cc/bwPQq5t0/spookymummy.webp"},
-            {name:"Spooky Ghost",rarity:"Mystical",color:"#9C27B0",chance:"0.008%",image:"https://ac.blooket.com/marketassets/blooks/spookyghost.svg"},
+            {name:"Spooky Ghost",rarity:"Mystical",color:"#9C27B0",chance:"0.008%",image:"https://ac.blooket.com/marketassets/blooks/spookyghost.svg"}
         ]
     },
 
@@ -1248,7 +1206,7 @@ const packs = {
             {name:"Pumpkin Puppy",rarity:"Rare",color:"blue",chance:"9%",image:"https://i.postimg.cc/Y05qtTD1/pumpkinpuppy.webp"},
             {name:"Autumn Crow",rarity:"Epic",color:"red",chance:"3.95%",image:"https://i.postimg.cc/X75Ys7Xx/autumncrow.webp"},
             {name:"Turkey",rarity:"Legendary",color:"orange",chance:"1.5%",image:"https://i.postimg.cc/NGS08rG5/turkey.webp"},
-            {name:"Golden Pumpkin Pie",rarity:"Chroma",color:"cyan",chance:"0.08%",image:"https://i.postimg.cc/qvdMSV3r/goldenpumpkinpie.webp"},
+            {name:"Golden Pumpkin Pie",rarity:"Chroma",color:"cyan",chance:"0.08%",image:"https://i.postimg.cc/qvdMSV3r/goldenpumpkinpie.webp"}
         ]
      },
 
@@ -1267,9 +1225,9 @@ const packs = {
             {name:"Celebrate Emoji",rarity:"Rare",color:"Blue",chance:"8.2%",image:"https://i.postimg.cc/cLsPv0gX/Celebrate-Emoji.png"},
             {name:"Rich Emoji",rarity:"Epic",color:"red",chance:"6%",image:"https://i.postimg.cc/76pphz02/Rich-Emoji.png"},
             {name:"Worried Emoji",rarity:"Epic",color:"red",chance:"6%",image:"https://i.postimg.cc/Nf8WG5MK/Worried-Emoji.png"},
-            {name:"Cold Emoji",rarity:"Legendary",color:"orange",chance:"1.5%",image:"https://i.postimg.cc/BQfrGxqW/Cold-Eomji.png"},
+            {name:"Cold Emoji",rarity:"Legendary",color:"orange",chance:"1.5%",image:"https://i.postimg.cc/BQfrGxqW/Cold-Emoji.png"},
             {name:"Angry Emoji",rarity:"Legendary",color:"orange",chance:"0.35%",image:"https://i.postimg.cc/h4dkwCRb/Angry-Emoji.png"},
-            {name:"Manley Emoji",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/d3rgy0jS/Manley-Emoji.png"},
+            {name:"Manley Emoji",rarity:"Chroma",color:"cyan",chance:"0.05%",image:"https://i.postimg.cc/d3rgy0jS/Manley-Emoji.png"}
         ]
      },
 
@@ -1286,10 +1244,10 @@ const packs = {
             {name:"Soda Dispenser",rarity:"Rare",color:"Blue",chance:"6%",image:"https://i.postimg.cc/sD2NzKtN/Soda-Dispenser.png"},
             {name:"Fast Food Combo",rarity:"Rare",color:"Blue",chance:"6%",image:"https://i.postimg.cc/mkmpMFFj/Fast-Food-Combo.png"},
             {name:"Milkshake",rarity:"Rare",color:"Blue",chance:"6%",image:"https://i.postimg.cc/LXBb9W9r/Milkshake.png"},
-            {name:"Hotdog",rarity:"Epic",color:"red",chance:"3.25%",image:"https://i.postimg.cc/nhg507Sw-/Hotdog.png"},
+            {name:"Hotdog",rarity:"Epic",color:"red",chance:"3.25%",image:"https://i.postimg.cc/nhg507Sw/Hotdog.png"},
             {name:"Glowing Burger",rarity:"Legendary",color:"orange",chance:"0.25%",image:"https://i.postimg.cc/7hHQfNbb/Glowing-Burger.png"},
             {name:"Chocolate Donut",rarity:"Chroma",color:"cyan",chance:"0.04%",image:"https://i.postimg.cc/k4dHdCmQ/Chocolate-Glaze-Donut.png"},
-            {name:"Chocolate Milkshake",rarity:"chroma",color:"cyan",chance:"0.02%",image:"https://i.postimg.cc/fbdPFL6W/Chocolate-Milkshake.png"},
+            {name:"Chocolate Milkshake",rarity:"chroma",color:"cyan",chance:"0.02%",image:"https://i.postimg.cc/fbdPFL6W/Chocolate-Milkshake.png"}
         ]
      },
 
@@ -1307,7 +1265,7 @@ const packs = {
             {name:"Crossy Vampire",rarity:"Rare",color:"blue",chance:"9%",image:"https://i.postimg.cc/8krL8v5V/Crossy-Vampire.png"},
             {name:"Dicey",rarity:"Epic",color:"Red",chance:"2.97%",image:"https://i.postimg.cc/15hwyznV/Dicey.png"},
             {name:"Seoul Chicken",rarity:"Legendary",color:"orange",chance:"0.5%",image:"https://i.postimg.cc/RV7fhzKs/Seoul-Chicken.png"},
-            {name:"Mafia Mallard",rarity:"Chroma",color:"cyan",chance:"0.06%",image:"https://i.postimg.cc/4ytcpDM3/Mafia-Mallard.png"},
+            {name:"Mafia Mallard",rarity:"Chroma",color:"cyan",chance:"0.06%",image:"https://i.postimg.cc/4ytcpDM3/Mafia-Mallard.png"}
         ]
      },
 
@@ -1329,7 +1287,7 @@ const packs = {
             {name:"YAAI",rarity:"Legendary",color:"orange",chance:"1.3%",image:"https://i.postimg.cc/yYzjxNMZ/YAAI.png"},
             {name:"Cybercriminal",rarity:"Chroma",color:"cyan",chance:"0.08%",image:"https://i.postimg.cc/cLxc7b41/Cybercriminal.png"},
             {name:"ILOVEYOU",rarity:"Chroma",color:"cyan",chance:"0.08%",image:"https://i.postimg.cc/0yV0V0bY/ILOVEYOU.png"},
-            {name:"Dark Web",rarity:"Mystical",color:"#9C27B0",chance:"0.006%",image:"https://i.postimg.cc/4497mTpC/DarkWeb.gif"},
+            {name:"Dark Web",rarity:"Mystical",color:"#9C27B0",chance:"0.006%",image:"https://i.postimg.cc/4497mTpC/DarkWeb.gif"}
         ]
      },
 
@@ -1346,9 +1304,9 @@ const packs = {
             {name:"Editor's Cursor",rarity:"Rare",color:"blue",chance:"8.25%",image:"https://i.postimg.cc/5NWwmNSS/Editor-s-Cursor.png"},
             {name:"Go Symbol",rarity:"Rare",color:"blue",chance:"8.25%",image:"https://i.postimg.cc/0y8DLW36/Go-Symbol.png"},
             {name:"Stop Symbol",rarity:"Rare",color:"blue",chance:"8.25%",image:"https://i.postimg.cc/h4dLx7TG/Stop-Symbol.png"},
-            {name:"SVG Sprite",rarity:"Epic",color:"red",chance:"5.75%",image:"https://i.postimg.cc/sx75RtsW-/SVG-Sprite.png"},
+            {name:"SVG Sprite",rarity:"Epic",color:"red",chance:"5.75%",image:"https://i.postimg.cc/sx75RtsW/SVG-Sprite.png"},
             {name:"PNG Sprite",rarity:"Epic",color:"red",chance:"5.75%",image:"https://i.postimg.cc/0QL7F8Rx/PNG-Sprite.png"},
-            {name:"Golden Scratch Logo",rarity:"Legendary",color:"orange",chance:"0.75%",image:"https://i.postimg.cc/Fsb0C5P5/Golden-Scratch-Logo.png"},
+            {name:"Golden Scratch Logo",rarity:"Legendary",color:"orange",chance:"0.75%",image:"https://i.postimg.cc/Fsb0C5P5/Golden-Scratch-Logo.png"}
         ]
      },
 
@@ -1369,7 +1327,7 @@ const packs = {
             {name:"Augustine2025",rarity:"Legendary",color:"orange",chance:"0.6%",image:"https://i.postimg.cc/D0QBgtt5/Augustine.png"},
             {name:"Ayden",rarity:"Chroma",color:"cyan",chance:"0.08%",image:"https://i.postimg.cc/BQgm1f5n/Ayden.png"},
             {name:"BlooketWarriorYT",rarity:"Mystical",color:"#9C27B0",chance:"0.007%",image:"https://i.postimg.cc/HnNfGGSm/Blooket-Warrior.gif"},
-            {name:"SuperMemes_64",rarity:"Whimsical",color:"#ff4ae5",chance:"0.0052%",image:"https://i.postimg.cc/x88WFj3g/Super-Memes-64.gif"},
+            {name:"SuperMemes_64",rarity:"Whimsical",color:"#ff4ae5",chance:"0.0052%",image:"https://i.postimg.cc/x88WFj3g/Super-Memes-64.gif"}
         ]
      },
 
@@ -1396,7 +1354,7 @@ const packs = {
             {name:"Red Piggy",rarity:"Chroma",color:"cyan",chance:"0.04%",image:"https://i.postimg.cc/tgL8V1Jm/Red-Piggy.png"},
             {name:"The Souls",rarity:"Mystical",color:"#9C27B0",chance:"0.008%",image:"https://i.postimg.cc/YqzRh6Bx/The-Souls-Backup.gif"}
         ]
-     },
+     }
 };
 
 let currentPack = null;
@@ -1414,7 +1372,6 @@ const addCoinBtn = document.getElementById("addCoinBtn");
 const instantToggleBtn = document.getElementById("instantToggleBtn");
 let instantOpen = false;
 
-// --- Overlay helpers ---
 function showOverlay(){
     overlay.classList.add("active");
     overlay.style.zIndex = "2001";
@@ -1433,20 +1390,17 @@ function closeInfoModal(){
     showOverlay();
 }
 
-// --- Toggle instant ---
 instantToggleBtn.addEventListener("click",()=>{
     instantOpen=!instantOpen;
     instantToggleBtn.textContent = instantOpen ? "Instant: ON" : "Instant: OFF";
     console.log("Instant open is now:", instantOpen);
 });
 
-// helper to enable/disable all pack open buttons
 function setPackButtonsDisabled(disabled){
     document.querySelectorAll('.card .open-btn').forEach(b=>b.disabled = disabled);
     if(addCoinBtn) addCoinBtn.disabled = disabled;
 }
 
-// --- Weighted random selection ---
 function getWeightedRandomBlook(pack){
     const total = pack.blooks.reduce((sum,b)=>sum + parseFloat(b.chance),0);
     let r = Math.random()*total;
@@ -1457,9 +1411,7 @@ function getWeightedRandomBlook(pack){
     return pack.blooks[pack.blooks.length-1];
 }
 
-// --- Start pack flow ---
 function startPack(packKey, btn){
-    // Convert to lowercase to handle case issues
     packKey = packKey.toLowerCase();
     
     currentPack = packs[packKey];
@@ -1493,7 +1445,6 @@ function startPack(packKey, btn){
     }
 }
 
-// --- Modal handlers ---
 yesBtn.addEventListener("click",()=>{ 
     modal.style.display="none"; 
     hideOverlay();
@@ -1530,7 +1481,6 @@ infoBtn.addEventListener("click",()=>{
     overlay.style.zIndex = "2003";
 });
 
-// --- Not Enough Coins ---
 function showNotEnoughCoins() {
     hideOverlay();
     const modalText = document.getElementById("modalText");
@@ -1556,7 +1506,6 @@ function showNotEnoughCoins() {
     noBtn.onclick = closeHandler;
 }
 
-// --- Open Pack ---
 function openPack(){
     if(!currentPack) {
         console.error("No current pack selected");
@@ -1567,18 +1516,14 @@ function openPack(){
     setPackButtonsDisabled(true);
     if(currentPackButton) currentPackButton.disabled = true;
     
-    // Clear any previous results
     const previous=resultsContainer.querySelector(".result-card");
     if(previous) previous.remove();
 
-    // Get random blook
     const blook = getWeightedRandomBlook(currentPack);
     console.log("Opened blook:", blook.name);
     
-    // Update user stats
     updateUserStats(blook, currentPack.cost);
 
-    // Create pack animation
     const animationSprite=document.createElement("img");
     animationSprite.src=currentPack.image || "";
     animationSprite.style.position="fixed";
@@ -1594,11 +1539,9 @@ function openPack(){
     animationSprite.style.cursor="pointer";
     document.body.appendChild(animationSprite);
 
-    // Show overlay
     overlay.classList.add("active");
     overlay.style.zIndex = "2001";
 
-    // Animate pack in
     requestAnimationFrame(()=>{ 
         animationSprite.style.transform="translate(-50%,-50%) scale(1)"; 
     });
@@ -1620,13 +1563,10 @@ function openPack(){
     }, {once:true});
 }
 
-// --- Result Card + Confetti ---
 function createResultCard(blook, pack){
-    // Remove previous canvas if exists
     const previousCanvas = document.querySelector(".confetti-canvas");
     if(previousCanvas) previousCanvas.remove();
 
-    // Create confetti canvas
     const canvas = document.createElement("canvas");
     canvas.classList.add("confetti-canvas");
     canvas.style.position="fixed"; 
@@ -1646,7 +1586,6 @@ function createResultCard(blook, pack){
         h = canvas.height = window.innerHeight; 
     });
 
-    // Create confetti particles
     let particles = [];
     const shapes = ['circle','square','triangle'];
     
@@ -1705,7 +1644,6 @@ function createResultCard(blook, pack){
     
     draw();
 
-    // Create result card
     const resultCard=document.createElement("div");
     resultCard.classList.add("result-card");
     resultCard.style.backgroundImage = `url(${pack.background || ''})`;
@@ -1724,7 +1662,6 @@ function createResultCard(blook, pack){
     `;
     resultsContainer.appendChild(resultCard);
 
-    // Show result card
     setTimeout(()=>{
         resultCard.classList.add("show");
         
@@ -1741,19 +1678,15 @@ function createResultCard(blook, pack){
             },300);
         };
         
-        // Allow clicking to close
         setTimeout(()=>{ 
             resultCard.addEventListener("click", hideResult, {once:true}); 
         },500);
         
-        // Auto-close after 5 seconds
         setTimeout(hideResult, 5000);
     },100);
 }
 
-// Initialize coin button (if admin)
 function initAddCoinButton() {
-    // This would be for admin functionality
     const userData = loadUserData();
     if (userData.username === "SuperMemes_64") {
         addCoinBtn.style.display = "block";
@@ -1765,25 +1698,19 @@ function initAddCoinButton() {
     }
 }
 
-// Initialize everything when page loads
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Market page loaded");
     
-    // Make sure user data is initialized
     initUserData();
     loadUserData();
     
-    // Initialize daily claim system
     initDailyClaim();
     
-    // Initialize coin button (if admin)
     initAddCoinButton();
     
-    // Debug logging
     console.log("Available packs:", Object.keys(packs));
     console.log("Instant open is:", instantOpen);
     
-    // Test that buttons work
     document.querySelectorAll('.open-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             console.log("Open button clicked");
