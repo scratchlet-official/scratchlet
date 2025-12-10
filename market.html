@@ -265,6 +265,14 @@ body {
     </div>
 
 <div class="market-cards">
+        <!-- FBI Santa-->
+    <div class="card">
+        <img src="https://i.postimg.cc/m2TBNc19/IMG-0091.webp" alt="FBI Santa">
+        <h2 class="pack-name">FBI Santa</h2>
+        <p class="pack-price">Price: 100 coins</p>
+        <button class="open-btn" onclick="startPack('fbisanta', this)">Open</button>
+    </div>
+
     <!-- Breakfast Pack -->
     <div class="card">
         <img src="https://i.postimg.cc/8Cs9nSzs/Breakfast.png" alt="Breakfast Pack">
@@ -818,6 +826,15 @@ function showClaimNotReady() {
 
 // --- Packs Data ---
 const packs = {
+    fbisanta: { 
+        name: "FBI Santa",
+        cost: 500,
+        image: "https://i.postimg.cc/m2TBNc19/IMG-0091.webp",
+        background: "https://i.postimg.cc/KjkJ3qFc/Screenshot-18-9-2025-213351-turbowarp-org.jpg",
+        blooks: [
+            {name:"FBI Santa",rarity:"Chroma",color:"cyan",chance:"100%,image:"https://i.postimg.cc/m2TBNc19/IMG-0091.webp"},
+        ]
+     },
     breakfast: { 
         name: "Breakfast Pack",
         cost: 15,
