@@ -263,7 +263,15 @@ body {
     </div>
 
 <div class="market-cards">
-        <!-- FBI Santa-->
+        <!-- Horned Panda Cocoa  -->
+    <div class="card">
+        <img src="https://i.postimg.cc/MGPQGW8B/IMG-0092.webp" alt="Horned Panda Cocoa">
+        <h2 class="pack-name">Horned Panda Cocoa</h2>
+        <p class="pack-price">Price: 500 coins</p>
+        <button class="open-btn" onclick="startPack('hornedpandacocoa', this)">Open</button>
+    </div>
+
+    <!-- FBI Santa-->
     <div class="card">
         <img src="https://i.postimg.cc/m2TBNc19/IMG-0091.webp" alt="FBI Santa">
         <h2 class="pack-name">FBI Santa</h2>
@@ -784,6 +792,15 @@ function showClaimNotReady() {
 }
 
 const packs = {
+    hornedpandacocoa: { 
+        name: "Horned Panda Cocoa",
+        cost: 500,
+        image: "https://i.postimg.cc/m2TBNc19/IMG-0091.webp",
+        background: "https://i.postimg.cc/KjkJ3qFc/Screenshot-18-9-2025-213351-turbowarp-org.jpg",
+        blooks: [
+            {name:"Horned Panda Cocoa",rarity:"Chroma",color:"cyan",chance:"100%",image:"https://i.postimg.cc/m2TBNc19/IMG-0091.webp"}
+        ]
+     },
     fbisanta: { 
         name: "FBI Santa",
         cost: 500,
